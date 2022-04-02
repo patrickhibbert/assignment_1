@@ -8,9 +8,9 @@
 //
 
 function setup() {
-  createCanvas(400, 400)
+  createCanvas(400, 500)
 }
 
 function draw() {
-  background(100)
+  background(10)
 }
