@@ -9,6 +9,6 @@ class draw_line {
     }
     show() {
         stroke(255)
-        draw_line(this.px, this.py, this.x, this.y)
+        line(this.px, this.py, this.x, this.y)
     }
 }
