@@ -14,10 +14,27 @@ var pencilWidth
 var clearCanvas
 var pencilShape
 var pencilRandom
+var mode
+
+let font, fontsize = 32;
+
+let img;
+
+function preload() {
+  font = loadFont('assets/code_font.ttf');
+  img = loadImage('assets/image_a.png');
+}
 
 function setup() {
-  let c = createCanvas(windowWidth, windowHeight - 250)
-  angleMode(DEGREES)
+  mode =  0;
+  createCanvas(windowWidth, 750);
+  textFont(font);
+  textSize(fontsize);
+  angleMode(DEGREES);
+  rectMode(CENTER);
+  stroke(255);
+  fill(255, 255, 255);
+  imageMode(CENTER);
 
   var options = createDiv().style('display: flex')
 
@@ -51,8 +68,40 @@ function setup() {
 }
 
 function draw() {
+  clear();
+  if (mode == 0) {
   background(backgroundColour.value())
+  textSize(30);
+  text('Welcome to', 30, 50);
+  fill(200);
+  textSize(45);
+  text('"Colour My Code"', 30, 100);
+  textSize(20);
+  text('hosted By', 30, 670);
+  textSize(30);
+  text('Patrick hibbert', 30, 710);
+  textSize(25);
+  text('pRess enter', windowWidth - 280, 675);
+  textSize(25);
+  text('To beGin...', windowWidth - 280, 710);
 
+  stroke(170)
+
+  translate(width / 2, height / 2)
+
+  for (var i = 0; i < 200; i++) {
+    push()
+
+    rotate(sin(frameCount + i) * 80)
+
+    rect(0, 0, 600 - i * 3, 00 - i * 3, 200 - i)
+
+    pop()
+  }
+}
+
+if (mode == 1) {
+  background(backgroundColour.value())
   if (pencilRandom.checked()) {
    var r = hex(floor(map(noise(frameCount / 100), 0, 1, 0, 255)), 2)
    var g = hex(floor(map(noise(frameCount / 100 + 1000), 0, 1, 0, 255)), 2)
@@ -73,6 +122,19 @@ function draw() {
   for (var line of lines) {
       line.show()
   }
+  
+}
+if (mode == 2) {
+  background(backgroundColour.value())
+  if (key === 'a') {
+    push();
+    rectMode(CORNER);
+    translate(mouseX, mouseY);
+    rotate(random(0, 360));
+    image(img, 0, 0, 15, 15);
+    pop();
+  }
+}
 
   saveCanvas.mousePressed(saveAsCanvas)
 }
@@ -81,3 +143,14 @@ function saveAsCanvas() {
   save("my_masterpiece.png");
 }
 
+function keyPressed() {
+  if (keyCode === ENTER) {
+    mode = 1;
+  }
+}
+
+function keyTyped() {
+  if (key === 'a') {
+    mode = 2;
+  }
+}
