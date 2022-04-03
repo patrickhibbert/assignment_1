@@ -14,11 +14,14 @@ var pencilWidth
 var clearCanvas
 var pencilShape
 var pencilRandom
+var generateForm
 var mode
 
 let font, fontsize = 32;
 
-let img;
+let brush;
+let imageBrush;
+
 
 function preload() {
   font = loadFont('assets/code_font.ttf');
@@ -32,39 +35,41 @@ function setup() {
   textSize(fontsize);
   angleMode(DEGREES);
   rectMode(CENTER);
-  stroke(255);
-  fill(255, 255, 255);
+  imageBrush = loadImage('assets/image_a.png');
+  brush = imageBrush;
   imageMode(CENTER);
 
   var options = createDiv().style('display: flex')
 
   var optionsTitles = createDiv().parent(options)
-  createP('Background Colour').parent(optionsTitles)
-  createP('Pencil Colour').parent(optionsTitles)
-  createP('Pencil Width').parent(optionsTitles)
-  createP('Pencil Shape').parent(optionsTitles)
+  createP('Background Colour').parent(optionsTitles).style('margin: 30px')
+  createP('Pencil Colour').parent(optionsTitles).style('margin: 30px')
+  createP('Funky Mode').parent(optionsTitles).style('margin: 30px')
+  createP('Pencil Width').parent(optionsTitles).style('margin: 30px')
+  createP('Pencil Shape').parent(optionsTitles).style('margin: 30px')
 
-  var optionsValues = createDiv().parent(options).style('margin: 10px 40px; width: 80px')
-  backgroundColour = createColorPicker('#1e1e1e').parent(optionsValues).style('margin-top: 10px')
-  pencilColour = createColorPicker('#ffffff').parent(optionsValues)
-  pencilRandom = createCheckbox("", false).parent(optionsValues).style('display: inline')
-  pencilWidth = createSelect(false).parent(optionsValues).style('margin-top: 10px; width: 50px; height: 25px')
+  var optionsValues = createDiv().parent(options).style('margin: 9px 40px; width: 80px')
+  backgroundColour = createColorPicker('#1e1e1e').parent(optionsValues).style('margin-top: 17px')
+  pencilColour = createColorPicker('#ffffff').parent(optionsValues).style('margin-top: 20px')
+  pencilRandom = createCheckbox("", false).parent(optionsValues).style('margin-top: 25px')
+  pencilWidth = createSelect(false).parent(optionsValues).style('margin-top: 25px; width: 50px; height: 25px')
   pencilWidth.option('2')
   pencilWidth.option('4')
   pencilWidth.option('8')
   pencilWidth.option('16')
   pencilWidth.option('32')
 
-  pencilShape = createSelect(false).parent(optionsValues).style('margin-top: 10px; width: 50px; height: 25px')
+  pencilShape = createSelect(false).parent(optionsValues).style('margin-top: 25px; width: 100px; height: 25px')
   pencilShape.option('Line')
   pencilShape.option('Circle')
   pencilShape.option('Rectangle')
   pencilShape.option('Triangle')
   pencilShape.option('Star')
 
-  clearCanvas = createButton('Clear').parent(options).style('margin: 10px; width: 100px; height: 100px')
+  clearCanvas = createButton('Clear').parent(options).style('margin: 20px; width: 100px; height: 40px')
 
-  saveCanvas = createButton("Save");
+  saveCanvas = createButton("Export").parent(options).style('margin: 20px; width: 100px; height: 40px')
+  
 }
 
 function draw() {
@@ -102,6 +107,8 @@ function draw() {
 
 if (mode == 1) {
   background(backgroundColour.value())
+  textSize(20);
+  text('pRess "a" to sWitch to imaGe brush', 30, 710);
   if (pencilRandom.checked()) {
    var r = hex(floor(map(noise(frameCount / 100), 0, 1, 0, 255)), 2)
    var g = hex(floor(map(noise(frameCount / 100 + 1000), 0, 1, 0, 255)), 2)
@@ -122,18 +129,12 @@ if (mode == 1) {
   for (var line of lines) {
       line.show()
   }
-  
 }
 if (mode == 2) {
   background(backgroundColour.value())
-  if (key === 'a') {
-    push();
-    rectMode(CORNER);
-    translate(mouseX, mouseY);
-    rotate(random(0, 360));
-    image(img, 0, 0, 15, 15);
-    pop();
-  }
+  textSize(20);
+  text('pRess "h" to return to home screen', 30, 710);
+  drawImageBrush();
 }
 
   saveCanvas.mousePressed(saveAsCanvas)
@@ -141,6 +142,14 @@ if (mode == 2) {
 
 function saveAsCanvas() {
   save("my_masterpiece.png");
+}
+
+function drawImageBrush(col, brushSize) {
+  tint(col, 40, 60);
+  push();
+  translate(mouseX, mouseY);
+  image(brush, 0, 0, brushSize, brushSize);
+  pop();
 }
 
 function keyPressed() {
@@ -152,5 +161,7 @@ function keyPressed() {
 function keyTyped() {
   if (key === 'a') {
     mode = 2;
+  } else if (key === 'h') {
+    mode = 0;
   }
 }
